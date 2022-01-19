@@ -2,6 +2,15 @@ name: Maven Deploy Artifact
 
 on:
   workflow_call:
+    secrets:
+      server-username:
+        required: true
+      server-password:
+        required: true
+      deploy-secret-key:
+        required: true
+      deploy-secret-key-password:
+        required: true
 
 jobs:
   deploy:
@@ -21,8 +30,8 @@ jobs:
       - name: Deploy package
         uses: valitydev/action-deploy-jdk-package@v1.0.12
         with:
-          server-username: ${{ secrets.OSSRH_USERNAME }}
-          server-password: ${{ secrets.OSSRH_TOKEN }}
-          deploy-secret-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
-          deploy-secret-key-password: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
+          server-username: ${{ secrets.server-username }}
+          server-password: ${{ secrets.server-password }}
+          deploy-secret-key: ${{ secrets.deploy-secret-key }}
+          deploy-secret-key-password: ${{ secrets.deploy-secret-key-password }}
           maven-args: '-Dcommit.number=${{ steps.commit_info.outputs.COMMIT_NUMBER }} -Drevision="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}"'

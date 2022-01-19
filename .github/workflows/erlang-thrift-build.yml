@@ -2,7 +2,6 @@ name: Erlang build
 on:
   workflow_call:
 
-
 jobs:
   build:
     name: Build and verify
