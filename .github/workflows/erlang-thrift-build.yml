@@ -12,7 +12,7 @@ jobs:
 
       - uses: valitydev/action-setup-thrift@v0.0.5
         with:
-          thrift-version: '0.14.2'
+          thrift-version: '0.14.2.1'
 
       - uses: erlef/setup-beam@v1.9
         id: beam
