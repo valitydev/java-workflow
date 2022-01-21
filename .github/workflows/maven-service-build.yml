@@ -21,5 +21,4 @@ jobs:
         uses: ./.github/actions/action-jdk-build
 
       - name: Test Coverage
-        if: ${{github.event.repository.public}}
         uses: codecov/codecov-action@v1
