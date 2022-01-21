@@ -6,7 +6,7 @@ on:
       github-token:
         required: true
       mm-webhook-url:
-        required: false
+        required: true
 
 jobs:
   build-and-deploy:
@@ -43,7 +43,6 @@ jobs:
   notify:
     runs-on: ubuntu-20.04
     needs: build-and-deploy
-    if: github.event.secrets.mm-webhook-url != ''
     steps:
       - name: Mattermost Notification
         uses: rtCamp/action-slack-notify@v2.2.0
