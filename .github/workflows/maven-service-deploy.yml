@@ -47,7 +47,6 @@ jobs:
         env:
           SLACK_USERNAME: ${GITHUB_REPOSITORY#*/}
           SLACK_WEBHOOK: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
-          SLACK_ICON: https://brew.sh/assets/img/homebrew-256x256.png
           SLACK_COLOR: ${{ job.status }}
           SLACK_LINK_NAMES: true
           SLACK_FOOTER: ""
