@@ -1,0 +1,25 @@
+name: Maven Build Artifact
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Checkout GitHub Action Repo
+        uses: actions/checkout@v2
+        with:
+          repository: valitydev/action-jdk-build
+          ref: v0.0.7
+          path: .github/actions/action-jdk-build
+
+      - name: Run Build Java
+        uses: ./.github/actions/action-jdk-build
+
+      - name: Test Coverage
+        if: ${{github.event.repository.public}}
+        uses: codecov/codecov-action@v1
