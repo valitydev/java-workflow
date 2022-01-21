@@ -30,6 +30,9 @@ jobs:
       - name: Run Build Java
         uses: ./.github/actions/action-jdk-build
 
+      - name: Test Coverage
+        uses: codecov/codecov-action@v1
+
       - name: Deploy image
         uses: ./.github/actions/action-deploy-docker
         with:
