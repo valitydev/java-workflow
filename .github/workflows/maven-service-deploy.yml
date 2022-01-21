@@ -47,7 +47,7 @@ jobs:
       - name: Mattermost Notification
         uses: rtCamp/action-slack-notify@v2.2.0
         env:
-          SLACK_USERNAME: ${GITHUB_REPOSITORY#*/}
+          SLACK_USERNAME: ${{ github.event.repository.name }}
           SLACK_WEBHOOK: ${{ secrets.mm-webhook-url }}
           SLACK_COLOR: ${{ job.status }}
           SLACK_LINK_NAMES: true
