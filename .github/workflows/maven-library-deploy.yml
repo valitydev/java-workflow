@@ -26,8 +26,6 @@ jobs:
           server-password: ${{ secrets.server-password }}
           deploy-secret-key: ${{ secrets.deploy-secret-key }}
           deploy-secret-key-password: ${{ secrets.deploy-secret-key-password }}
-  code-coverage:
-    runs-on: ubuntu-20.04
-    steps:
+
       - name: Upload code coverage
         uses: codecov/codecov-action@v1
