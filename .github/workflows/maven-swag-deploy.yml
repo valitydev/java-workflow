@@ -69,14 +69,14 @@ jobs:
         run: |
           mvn versions:set versions:commit -DnewVersion="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}-server"
 
-      - name: Deploy server package
-        uses: valitydev/action-deploy-jdk-package@v1.0.13
-        with:
-          server-username: ${{ secrets.server-username }}
-          server-password: ${{ secrets.server-password }}
-          deploy-secret-key: ${{ secrets.deploy-secret-key }}
-          deploy-secret-key-password: ${{ secrets.deploy-secret-key-password }}
-          maven-args: '-Dcommit.number=${{ steps.commit_info.outputs.COMMIT_NUMBER }} -Drevision="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}-server" -P="server"'
+#      - name: Deploy server package
+#        uses: valitydev/action-deploy-jdk-package@v1.0.13
+#        with:
+#          server-username: ${{ secrets.server-username }}
+#          server-password: ${{ secrets.server-password }}
+#          deploy-secret-key: ${{ secrets.deploy-secret-key }}
+#          deploy-secret-key-password: ${{ secrets.deploy-secret-key-password }}
+#          maven-args: '-Dcommit.number=${{ steps.commit_info.outputs.COMMIT_NUMBER }} -Drevision="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}-server" -P="server"'
 
   deploy-client:
     runs-on: ubuntu-20.04
@@ -103,14 +103,14 @@ jobs:
         run: |
           mvn versions:set versions:commit -DnewVersion="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}-client"
 
-      - name: Deploy client package
-        uses: valitydev/action-deploy-jdk-package@v1.0.13
-        with:
-          server-username: ${{ secrets.server-username }}
-          server-password: ${{ secrets.server-password }}
-          deploy-secret-key: ${{ secrets.deploy-secret-key }}
-          deploy-secret-key-password: ${{ secrets.deploy-secret-key-password }}
-          maven-args: '-Dcommit.number=${{ steps.commit_info.outputs.COMMIT_NUMBER }} -Drevision="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}-client" -P="client"'
+#      - name: Deploy client package
+#        uses: valitydev/action-deploy-jdk-package@v1.0.13
+#        with:
+#          server-username: ${{ secrets.server-username }}
+#          server-password: ${{ secrets.server-password }}
+#          deploy-secret-key: ${{ secrets.deploy-secret-key }}
+#          deploy-secret-key-password: ${{ secrets.deploy-secret-key-password }}
+#          maven-args: '-Dcommit.number=${{ steps.commit_info.outputs.COMMIT_NUMBER }} -Drevision="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}-client" -P="client"'
 
   publish-redoc:
     runs-on: ubuntu-20.04
