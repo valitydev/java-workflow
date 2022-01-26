@@ -87,7 +87,7 @@ jobs:
           server-password: ${{ secrets.server-password }}
           deploy-secret-key: ${{ secrets.deploy-secret-key }}
           deploy-secret-key-password: ${{ secrets.deploy-secret-key-password }}
-          maven-args: '-Dcommit.number=${{ steps.commit_info.outputs.COMMIT_NUMBER }} -Drevision="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}-server" -P="public" -P="server"'
+          maven-args: '-Dcommit.number=${{ steps.commit_info.outputs.COMMIT_NUMBER }} -Drevision="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}-server" -P="server"'
 
   deploy-client:
     runs-on: ubuntu-20.04
@@ -124,7 +124,7 @@ jobs:
           server-password: ${{ secrets.server-password }}
           deploy-secret-key: ${{ secrets.deploy-secret-key }}
           deploy-secret-key-password: ${{ secrets.deploy-secret-key-password }}
-          maven-args: '-Dcommit.number=${{ steps.commit_info.outputs.COMMIT_NUMBER }} -Drevision="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}-client" -P="public" -P="client"'
+          maven-args: '-Dcommit.number=${{ steps.commit_info.outputs.COMMIT_NUMBER }} -Drevision="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}-client" -P="client"'
 
   publish-redoc:
     runs-on: ubuntu-20.04
