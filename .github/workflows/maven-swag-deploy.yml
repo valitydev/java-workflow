@@ -36,19 +36,13 @@ jobs:
       - name: Validate specification
         run: npm run validate
 
-      - name: Build static html
-        run: |
-          npx redoc-cli bundle web_deploy/openapi.yaml
-          mv redoc-static.html index.html
-
       - name: Cache build
         uses: actions/cache@v2
         with:
           path: |
             ~/.npm
             web_deploy
-            index.html
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/index.html') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/web_deploy/openapi.yaml') }}
 
   deploy-server:
     runs-on: ubuntu-20.04
@@ -63,8 +57,7 @@ jobs:
           path: |
             ~/.npm
             web_deploy
-            index.html
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/index.html') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/web_deploy/openapi.yaml') }}
 
       - name: Retrieve commit info
         run: |
@@ -98,8 +91,7 @@ jobs:
           path: |
             ~/.npm
             web_deploy
-            index.html
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/index.html') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/web_deploy/openapi.yaml') }}
 
       - name: Retrieve commit info
         run: |
@@ -133,8 +125,12 @@ jobs:
           path: |
             ~/.npm
             web_deploy
-            index.html
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/index.html') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/web_deploy/openapi.yaml') }}
+
+      - name: Build static html
+        run: |
+          npx redoc-cli bundle web_deploy/openapi.yaml
+          mv redoc-static.html index.html
 
       - name: Publish ReDoc on Github Pages
         uses: peaceiris/actions-gh-pages@v3
