@@ -70,15 +70,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: Set artifact version
-        run: |
-          mvn versions:set versions:commit -DnewVersion="${{ github.event.repository.name }}-server"
-
       - name: Retrieve commit info
         run: |
           echo "::set-output name=COMMIT_NUMBER::$(git rev-list HEAD --count)"
           echo "::set-output name=SHA_7::${GITHUB_SHA::7}"
         id: commit_info
+
+      - name: Set artifact version
+        run: |
+          mvn versions:set versions:commit -DnewVersion="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}-server"
 
       - name: Deploy server package
         uses: valitydev/action-deploy-jdk-package@v1.0.13
@@ -107,15 +107,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: Set artifact version
-        run: |
-          mvn versions:set versions:commit -DnewVersion="${{ github.event.repository.name }}-client"
-
       - name: Retrieve commit info
         run: |
           echo "::set-output name=COMMIT_NUMBER::$(git rev-list HEAD --count)"
           echo "::set-output name=SHA_7::${GITHUB_SHA::7}"
         id: commit_info
+
+      - name: Set artifact version
+        run: |
+          mvn versions:set versions:commit -DnewVersion="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}-client"
 
       - name: Deploy client package
         uses: valitydev/action-deploy-jdk-package@v1.0.13
