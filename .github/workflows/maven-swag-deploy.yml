@@ -38,7 +38,7 @@ jobs:
 
       - name: Build static html
         run: |
-          redoc-cli bundle web_deploy/openapi.yaml
+          npx redoc-cli bundle web_deploy/openapi.yaml
           mv redoc-static.html index.html
 
       - name: Cache build
