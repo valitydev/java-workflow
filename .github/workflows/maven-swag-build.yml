@@ -1,0 +1,38 @@
+name: Maven Build Artifact
+
+on:
+  workflow_call:
+
+jobs:
+  bundle:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Maven
+        uses: actions/setup-java@v2
+        with:
+          java-version: '15'
+          distribution: 'adopt'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: npm
+
+      - name: NPM install
+        run: npm install
+
+      - name: Bundle specification
+        run: npm run build
+
+      - name: Validate specification
+        run: npm run validate
+
+      - name: Build server jar
+        run: mvn --batch-mode clean package -f pom.xml -P="server"
+
+      - name: Build client jar
+        run: mvn --batch-mode clean package -f pom.xml -P="client"

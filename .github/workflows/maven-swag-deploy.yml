@@ -1,0 +1,141 @@
+name: Deploy Artifact
+
+on:
+  workflow_call:
+    secrets:
+      server-username:
+        required: true
+      server-password:
+        required: true
+      deploy-secret-key:
+        required: true
+      deploy-secret-key-password:
+        required: true
+      github-token:
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: npm
+
+      - name: NPM install
+        run: npm install
+
+      - name: Bundle specification
+        run: npm run build
+
+      - name: Validate specification
+        run: npm run validate
+
+      - name: Cache build
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.npm
+            web_deploy
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/web_deploy/openapi.yaml') }}
+
+  deploy-server:
+    runs-on: ubuntu-20.04
+    needs: [build]
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Cache build
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.npm
+            web_deploy
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/web_deploy/openapi.yaml') }}
+
+      - name: Retrieve commit info
+        run: |
+          echo "::set-output name=COMMIT_NUMBER::$(git rev-list HEAD --count)"
+          echo "::set-output name=SHA_7::${GITHUB_SHA::7}"
+        id: commit_info
+
+      - name: Set artifact version
+        run: |
+          mvn versions:set versions:commit -DnewVersion="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}-server"
+
+      - name: Deploy server package
+        uses: valitydev/action-deploy-jdk-package@v1.0.13
+        with:
+          server-username: ${{ secrets.server-username }}
+          server-password: ${{ secrets.server-password }}
+          deploy-secret-key: ${{ secrets.deploy-secret-key }}
+          deploy-secret-key-password: ${{ secrets.deploy-secret-key-password }}
+          maven-args: '-Dcommit.number=${{ steps.commit_info.outputs.COMMIT_NUMBER }} -Drevision="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}-server" -P="server"'
+
+  deploy-client:
+    runs-on: ubuntu-20.04
+    needs: [ build ]
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Cache build
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.npm
+            web_deploy
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/web_deploy/openapi.yaml') }}
+
+      - name: Retrieve commit info
+        run: |
+          echo "::set-output name=COMMIT_NUMBER::$(git rev-list HEAD --count)"
+          echo "::set-output name=SHA_7::${GITHUB_SHA::7}"
+        id: commit_info
+
+      - name: Set artifact version
+        run: |
+          mvn versions:set versions:commit -DnewVersion="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}-client"
+
+      - name: Deploy client package
+        uses: valitydev/action-deploy-jdk-package@v1.0.13
+        with:
+          server-username: ${{ secrets.server-username }}
+          server-password: ${{ secrets.server-password }}
+          deploy-secret-key: ${{ secrets.deploy-secret-key }}
+          deploy-secret-key-password: ${{ secrets.deploy-secret-key-password }}
+          maven-args: '-Dcommit.number=${{ steps.commit_info.outputs.COMMIT_NUMBER }} -Drevision="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}-client" -P="client"'
+
+  publish-redoc:
+    runs-on: ubuntu-20.04
+    needs: [ deploy-client, deploy-server ]
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Cache build
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.npm
+            web_deploy
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/web_deploy/openapi.yaml') }}
+
+      - name: Build static html
+        run: |
+          npx redoc-cli bundle web_deploy/openapi.yaml
+          mv redoc-static.html index.html
+
+      - name: Publish ReDoc on Github Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.github-token }}
+          publish_dir: .
+          force_orphan: true
+          exclude_assets: '.github,openapi,plugins,web,.redocly.yaml,LICENSE,README.md,pom.xml,renovate.json,package.json,package-lock.json'
