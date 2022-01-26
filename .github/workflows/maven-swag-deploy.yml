@@ -46,7 +46,7 @@ jobs:
         with:
           path: |
             ~/.npm
-            ~/.wep_deploy
+            ~/.web_deploy
             ~/.index.html
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
