@@ -64,7 +64,8 @@ jobs:
         with:
           path: |
             ~/.npm
-            ~/index.html
+            web_deploy
+            index.html
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
@@ -100,7 +101,8 @@ jobs:
         with:
           path: |
             ~/.npm
-            ~/index.html
+            web_deploy
+            index.html
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
