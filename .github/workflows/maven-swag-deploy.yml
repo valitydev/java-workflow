@@ -15,13 +15,11 @@ on:
         required: true
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v2
@@ -43,6 +41,37 @@ jobs:
           redoc-cli bundle web_deploy/openapi.yaml
           mv redoc-static.html index.html
 
+      - name: Cache build
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.npm
+            ~/index.html
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+  deploy-server:
+    runs-on: ubuntu-20.04
+    needs: [build]
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Cache build
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.npm
+            ~/index.html
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Set artifact version
+        run: |
+          mvn versions:set versions:commit -DnewVersion="${{ github.event.repository.name }}-server"
+
       - name: Retrieve commit info
         run: |
           echo "::set-output name=COMMIT_NUMBER::$(git rev-list HEAD --count)"
@@ -58,6 +87,33 @@ jobs:
           deploy-secret-key-password: ${{ secrets.deploy-secret-key-password }}
           maven-args: '-Dcommit.number=${{ steps.commit_info.outputs.COMMIT_NUMBER }} -Drevision="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}-server" -P="server"'
 
+  deploy-client:
+    runs-on: ubuntu-20.04
+    needs: [ build ]
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Cache build
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.npm
+            ~/index.html
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Set artifact version
+        run: |
+          mvn versions:set versions:commit -DnewVersion="${{ github.event.repository.name }}-client"
+
+      - name: Retrieve commit info
+        run: |
+          echo "::set-output name=COMMIT_NUMBER::$(git rev-list HEAD --count)"
+          echo "::set-output name=SHA_7::${GITHUB_SHA::7}"
+        id: commit_info
+
       - name: Deploy client package
         uses: valitydev/action-deploy-jdk-package@v1.0.13
         with:
@@ -66,6 +122,23 @@ jobs:
           deploy-secret-key: ${{ secrets.deploy-secret-key }}
           deploy-secret-key-password: ${{ secrets.deploy-secret-key-password }}
           maven-args: '-Dcommit.number=${{ steps.commit_info.outputs.COMMIT_NUMBER }} -Drevision="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}-client" -P="client"'
+
+  publish-redoc:
+    runs-on: ubuntu-20.04
+    needs: [ deploy-client, deploy-server ]
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Cache build
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.npm
+            ~/index.html
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Publish ReDoc on Github Pages
         uses: peaceiris/actions-gh-pages@v3
