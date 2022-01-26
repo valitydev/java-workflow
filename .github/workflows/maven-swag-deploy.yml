@@ -36,18 +36,11 @@ jobs:
       - name: Validate specification
         run: npm run validate
 
-      - name: Build static html
-        run: |
-          npx redoc-cli bundle web_deploy/openapi.yaml
-          mv redoc-static.html index.html
-
       - name: Cache build
         uses: actions/cache@v2
         with:
           path: |
             ~/.npm
-            web_deploy
-            index.html
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
@@ -64,8 +57,6 @@ jobs:
         with:
           path: |
             ~/.npm
-            web_deploy
-            index.html
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
@@ -101,8 +92,6 @@ jobs:
         with:
           path: |
             ~/.npm
-            web_deploy
-            index.html
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
@@ -138,11 +127,17 @@ jobs:
         with:
           path: |
             ~/.npm
-            web_deploy
-            index.html
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
+
+      - name: Bundle specification
+        run: npm run build
+
+      - name: Build static html
+        run: |
+          npx redoc-cli bundle web_deploy/openapi.yaml
+          mv redoc-static.html index.html
 
       - name: Publish ReDoc on Github Pages
         uses: peaceiris/actions-gh-pages@v3
