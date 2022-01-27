@@ -2,6 +2,17 @@ name: Maven Build Artifact
 
 on:
   workflow_call:
+    inputs:
+      java-version:
+        description: 'Java version'
+        required: false
+        default: "15"
+        type: string
+      java-distribution:
+        description: 'Java distribution'
+        required: false
+        default: "adopt"
+        type: string
 
 jobs:
   build:
@@ -10,14 +21,31 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
-      - name: Set up Maven Central Repository
+      - name: Set up JDK
         uses: actions/setup-java@v2
         with:
-          java-version: '15'
-          distribution: 'adopt'
+          java-version: ${{ inputs.java-version }}
+          distribution: ${{ inputs.java-distribution }}
+          cache: 'maven'
 
-      - name: Build package
+      - name: Maven Compile
         run: mvn --batch-mode clean compile
+
+  test-coverage:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ inputs.java-version }}
+          distribution: ${{ inputs.java-distribution }}
+          cache: 'maven'
+
+      - name: Maven Verify
+        run: mvn --batch-mode clean verify
 
       - name: Upload code coverage
         uses: codecov/codecov-action@v1
