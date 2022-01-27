@@ -15,31 +15,27 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
-      - name: Checkout GitHub Action JDK Build Repo
-        uses: actions/checkout@v2
-        with:
-          repository: valitydev/action-jdk-build
-          ref: v0.0.7
-          path: .github/actions/action-jdk-build
-
-      - name: Checkout GitHub Action Deploy Docker Repo
-        uses: actions/checkout@v2
-        with:
-          repository: valitydev/action-deploy-docker
-          ref: v1.0.16
-          path: .github/actions/action-deploy-docker
-
       - name: Run Build Java
-        uses: ./.github/actions/action-jdk-build
+        uses: valitydev/action-jdk-build@v0.0.7
 
       - name: Deploy image
-        uses: ./.github/actions/action-deploy-docker
+        uses: valitydev/action-deploy-docker@v1.0.16
         with:
           registry-username: ${{ github.actor }}
           registry-access-token: ${{ secrets.github-token }}
 
+  test-coverage:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Run Build Java
+        uses: valitydev/action-jdk-build@v0.0.7
+
       - name: Upload code coverage
         uses: codecov/codecov-action@v1
+
   notify:
     runs-on: ubuntu-20.04
     needs: build-and-deploy
