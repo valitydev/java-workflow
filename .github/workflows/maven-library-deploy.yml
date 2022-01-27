@@ -2,6 +2,17 @@ name: Maven Deploy Package
 
 on:
   workflow_call:
+    inputs:
+      java-version:
+        description: 'Java version'
+        required: false
+        default: "15"
+        type: string
+      java-distribution:
+        description: 'Java distribution'
+        required: false
+        default: "adopt"
+        type: string
     secrets:
       server-username:
         required: true
