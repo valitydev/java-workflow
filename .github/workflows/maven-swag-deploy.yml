@@ -36,13 +36,12 @@ jobs:
       - name: Validate specification
         run: npm run validate
 
-      - name: Cache build
+      - name: Cache NPM packages
         uses: actions/cache@v2
         with:
           path: |
             ~/.npm
-            web_deploy
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/web_deploy/openapi.yaml') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
 
   deploy-server:
     runs-on: ubuntu-20.04
@@ -51,13 +50,15 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
-      - name: Cache build
+      - name: Cache NPM packages
         uses: actions/cache@v2
         with:
           path: |
             ~/.npm
-            web_deploy
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/web_deploy/openapi.yaml') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Bundle specification
+        run: npm run build
 
       - name: Retrieve commit info
         run: |
@@ -85,13 +86,15 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
-      - name: Cache build
+      - name: Cache NPM packages
         uses: actions/cache@v2
         with:
           path: |
             ~/.npm
-            web_deploy
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/web_deploy/openapi.yaml') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Bundle specification
+        run: npm run build
 
       - name: Retrieve commit info
         run: |
@@ -119,13 +122,15 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
-      - name: Cache build
+      - name: Cache NPM packages
         uses: actions/cache@v2
         with:
           path: |
             ~/.npm
-            web_deploy
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/web_deploy/openapi.yaml') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Bundle specification
+        run: npm run build
 
       - name: Build static html
         run: |
