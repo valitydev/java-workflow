@@ -39,9 +39,10 @@ jobs:
       - name: Cache NPM packages
         uses: actions/cache@v2
         with:
-          path: |
-            ~/.npm
+          path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
   deploy-server:
     runs-on: ubuntu-20.04
@@ -53,9 +54,10 @@ jobs:
       - name: Cache NPM packages
         uses: actions/cache@v2
         with:
-          path: |
-            ~/.npm
+          path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Bundle specification
         run: npm run build
@@ -89,9 +91,10 @@ jobs:
       - name: Cache NPM packages
         uses: actions/cache@v2
         with:
-          path: |
-            ~/.npm
+          path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Bundle specification
         run: npm run build
@@ -125,9 +128,10 @@ jobs:
       - name: Cache NPM packages
         uses: actions/cache@v2
         with:
-          path: |
-            ~/.npm
+          path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Bundle specification
         run: npm run build
