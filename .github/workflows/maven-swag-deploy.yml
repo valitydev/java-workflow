@@ -99,9 +99,6 @@ jobs:
             web_deploy
           key: ${{ runner.os }}-web-${{ github.sha }}
 
-      - name: Bundle specification
-        run: npm run build
-
       - name: Retrieve commit info
         run: |
           echo "::set-output name=COMMIT_NUMBER::$(git rev-list HEAD --count)"
