@@ -10,27 +10,14 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
-      - name: Cache local Maven repository
-        uses: actions/cache@v2
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-
       - name: Run Build Java
         uses: valitydev/action-jdk-buildv0.0.7
 
   test-coverage:
     runs-on: ubuntu-20.04
     steps:
-      - name: Cache local Maven repository
-        uses: actions/cache@v2
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+      - name: Checkout Repo
+        uses: actions/checkout@v2
 
       - name: Run Build Java
         uses: valitydev/action-jdk-buildv0.0.7
