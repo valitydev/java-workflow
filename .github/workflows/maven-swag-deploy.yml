@@ -42,14 +42,13 @@ jobs:
       - name: Validate specification
         run: npm run validate
 
-      - name: Cache NPM packages
-        id: cache
+      - name: Cache build
+        id: cache-build
         uses: actions/cache@v2
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          path: |
+            web_deploy
+          key: ${{ runner.os }}-web-${{ github.sha }}
 
   deploy-server:
     runs-on: ubuntu-20.04
@@ -58,21 +57,13 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
-      - name: Cache NPM packages
-        id: cache
+      - name: Cache build
+        id: cache-build
         uses: actions/cache@v2
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci --ignore-scripts
-
-      - name: Bundle specification
-        run: npm run build
+          path: |
+            web_deploy
+          key: ${{ runner.os }}-web-${{ github.sha }}
 
       - name: Retrieve commit info
         run: |
@@ -100,18 +91,13 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
-      - name: Cache NPM packages
-        id: cache
+      - name: Cache build
+        id: cache-build
         uses: actions/cache@v2
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci --ignore-scripts
+          path: |
+            web_deploy
+          key: ${{ runner.os }}-web-${{ github.sha }}
 
       - name: Bundle specification
         run: npm run build
@@ -142,21 +128,13 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
-      - name: Cache NPM packages
-        id: cache
+      - name: Cache build
+        id: cache-build
         uses: actions/cache@v2
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci --ignore-scripts
-
-      - name: Bundle specification
-        run: npm run build
+          path: |
+            web_deploy
+          key: ${{ runner.os }}-web-${{ github.sha }}
 
       - name: Build static html
         run: |
