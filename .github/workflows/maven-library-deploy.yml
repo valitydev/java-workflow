@@ -62,7 +62,7 @@ jobs:
   check-secret:
     runs-on: ubuntu-latest
     outputs:
-      mm-secret: ${{ steps.my-key.outputs.defined }}
+      mm-secret: ${{ steps.mm-secret.outputs.defined }}
     steps:
       - id: mm-secret
         if: "${{ env.MM-SECRET != '' }}"
