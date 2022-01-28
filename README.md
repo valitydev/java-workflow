@@ -24,6 +24,7 @@ jobs:
   build:
     uses: valitydev/base-workflow/.github/workflows/maven-service-build.yml@v1
 ```
+`deploy.yml`
 ```yaml
 name: Deploy Docker Image
 
