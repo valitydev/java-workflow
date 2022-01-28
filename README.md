@@ -41,8 +41,6 @@ jobs:
       mm-webhook-url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
 ```
 
-
-
 ### Service
 `build.yml`
 ```yaml
