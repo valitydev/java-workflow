@@ -22,6 +22,8 @@ on:
         required: true
       deploy-secret-key-password:
         required: true
+      mm-webhook-url:
+        required: false
 
 jobs:
   deploy:
@@ -56,3 +58,22 @@ jobs:
 
       - name: Upload code coverage
         uses: codecov/codecov-action@v1
+
+  check-secret:
+    runs-on: ubuntu-latest
+    outputs:
+      mm-secret: ${{ steps.my-key.outputs.defined }}
+    steps:
+      - id: mm-secret
+        if: "${{ env.MM-SECRET != '' }}"
+        run: echo "::set-output name=defined::true"
+        env:
+          MM-SECRET: ${{ secrets.mm-webhook-url }}
+
+  notify:
+    runs-on: ubuntu-20.04
+    needs: [build-and-deploy, check-secret]
+    if: needs.check-secret.outputs.mm-secret == 'true'
+    steps:
+      - name: Mattermost Notification
+        run: echo notify-test
