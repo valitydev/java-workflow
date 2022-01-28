@@ -2,6 +2,22 @@ name: Maven Build Artifact
 
 on:
   workflow_call:
+    inputs:
+      node-version:
+        description: 'Node version'
+        required: false
+        default: "16"
+        type: string
+      java-version:
+        description: 'Java version'
+        required: false
+        default: "15"
+        type: string
+      java-distribution:
+        description: 'Java distribution'
+        required: false
+        default: "adopt"
+        type: string
 
 jobs:
   bundle:
@@ -13,13 +29,13 @@ jobs:
       - name: Setup Maven
         uses: actions/setup-java@v2
         with:
-          java-version: '15'
-          distribution: 'adopt'
+          java-version: ${{ inputs.java-version }}
+          distribution: ${{ inputs.java-distribution }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: ${{ inputs.node-version }}
           cache: npm
 
       - name: NPM install

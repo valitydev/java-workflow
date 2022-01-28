@@ -2,6 +2,21 @@ name: Maven Build Artifact
 
 on:
   workflow_call:
+    inputs:
+      java-version:
+        description: 'Java version'
+        required: false
+        default: "15"
+        type: string
+      java-distribution:
+        description: 'Java distribution'
+        required: false
+        default: "adopt"
+        type: string
+      mvn-args:
+        description: 'Additional maven args'
+        required: false
+        type: string
 
 jobs:
   build:
@@ -11,7 +26,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Run Build Java
-        uses: valitydev/action-jdk-build@v0.0.7
+        uses: valitydev/action-jdk-build@v0.0.8
+        with:
+          jdk-version: ${{ inputs.java-version }}
+          jdk-distribution: ${{ inputs.jdk-distribution }}
+          mvn-args: ${{ inputs.mvn-args }}
 
   test-coverage:
     runs-on: ubuntu-20.04
@@ -20,7 +39,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Run Build Java
-        uses: valitydev/action-jdk-build@v0.0.7
+        uses: valitydev/action-jdk-build@v0.0.8
+        with:
+          jdk-version: ${{ inputs.java-version }}
+          jdk-distribution: ${{ inputs.jdk-distribution }}
+          mvn-args: ${{ inputs.mvn-args }}
 
       - name: Upload code coverage
         uses: codecov/codecov-action@v1
