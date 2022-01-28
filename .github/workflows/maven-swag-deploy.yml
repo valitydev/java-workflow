@@ -19,6 +19,8 @@ on:
         required: true
       github-token:
         required: true
+      mm-webhook-url:
+        required: true
 
 jobs:
   build:
@@ -145,3 +147,16 @@ jobs:
           publish_dir: .
           force_orphan: true
           exclude_assets: '.github,openapi,plugins,web,.redocly.yaml,LICENSE,README.md,pom.xml,renovate.json,package.json,package-lock.json'
+
+  notify:
+    runs-on: ubuntu-20.04
+    needs: [deploy-server, deploy-client]
+    steps:
+      - name: Mattermost Notification
+        uses: rtCamp/action-slack-notify@v2.2.0
+        env:
+          SLACK_USERNAME: ${{ github.event.repository.name }}
+          SLACK_WEBHOOK: ${{ secrets.mm-webhook-url }}
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_LINK_NAMES: true
+          SLACK_FOOTER: ""
