@@ -66,7 +66,7 @@ jobs:
 
   notify:
     runs-on: ubuntu-20.04
-    needs: [ build-and-deploy, check-secret ]
+    needs: [ build, check-secret ]
     if: needs.check-secret.outputs.mm-secret == 'true'
     steps:
       - name: Mattermost Notification
