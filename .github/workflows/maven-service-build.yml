@@ -29,7 +29,7 @@ jobs:
         uses: valitydev/action-jdk-build@v0.0.8
         with:
           jdk-version: ${{ inputs.java-version }}
-          jdk-distribution: ${{ inputs.jdk-distribution }}
+          jdk-distribution: ${{ inputs.java-distribution }}
           mvn-args: ${{ inputs.mvn-args }}
 
   test-coverage:
@@ -42,7 +42,7 @@ jobs:
         uses: valitydev/action-jdk-build@v0.0.8
         with:
           jdk-version: ${{ inputs.java-version }}
-          jdk-distribution: ${{ inputs.jdk-distribution }}
+          jdk-distribution: ${{ inputs.java-distribution }}
           mvn-args: ${{ inputs.mvn-args }}
 
       - name: Upload code coverage
