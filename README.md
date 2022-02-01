@@ -66,6 +66,7 @@ uses: valitydev/java-workflow/.github/workflows/maven-thrift-deploy.yml@v1
     server-password: ${{ secrets.OSSRH_TOKEN }}
     deploy-secret-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
     deploy-secret-key-password: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
+    mm-webhook-url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
 ```
 `erlang-build-verify.yml`
 ```yaml
@@ -84,6 +85,7 @@ uses: valitydev/java-workflow/.github/workflows/maven-library-deploy.yml@v1
     server-password: ${{ secrets.OSSRH_TOKEN }}
     deploy-secret-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
     deploy-secret-key-password: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
+    mm-webhook-url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
 ```
 ### Swag
 `build.yml`
@@ -99,4 +101,5 @@ uses: valitydev/java-workflow/.github/workflows/maven-swag-deploy.yml@v1
     deploy-secret-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
     deploy-secret-key-password: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
     github-token: ${{ secrets.GITHUB_TOKEN }}
+    mm-webhook-url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
 ```
