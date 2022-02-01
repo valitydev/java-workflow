@@ -90,7 +90,7 @@ uses: valitydev/java-workflow/.github/workflows/maven-library-deploy.yml@v1
 ### Swag
 `build.yml`
 ```yaml
-uses: valitydev/java-workflow/.github/workflows/maven-swag-build.yml@1
+uses: valitydev/java-workflow/.github/workflows/maven-swag-build.yml@v1
 ```
 `deploy.yml`
 ```yaml
