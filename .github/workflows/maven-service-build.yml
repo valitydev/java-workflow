@@ -17,6 +17,10 @@ on:
         description: 'Additional maven args'
         required: false
         type: string
+      ignore-coverage:
+        description: 'Ignore test coverage step'
+        required: false
+        type: boolean
 
 jobs:
   build:
@@ -33,6 +37,7 @@ jobs:
           mvn-args: ${{ inputs.mvn-args }}
 
   test-coverage:
+    if: ${{ github.event.inputs.ignore-coverage == 'false' }}
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout Repo

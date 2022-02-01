@@ -2,6 +2,25 @@ name: Maven Deploy Artifact
 
 on:
   workflow_call:
+    inputs:
+      java-version:
+        description: 'Java version'
+        required: false
+        default: "15"
+        type: string
+      java-distribution:
+        description: 'Java distribution'
+        required: false
+        default: "adopt"
+        type: string
+      mvn-args:
+        description: 'Additional maven args'
+        required: false
+        type: string
+      ignore-coverage:
+        description: 'Ignore test coverage step'
+        required: false
+        type: boolean
     secrets:
       github-token:
         required: true
@@ -17,6 +36,10 @@ jobs:
 
       - name: Run Build Java
         uses: valitydev/action-jdk-build@v0.0.8
+        with:
+          jdk-version: ${{ inputs.java-version }}
+          jdk-distribution: ${{ inputs.java-distribution }}
+          mvn-args: ${{ inputs.mvn-args }}
 
       - name: Deploy image
         uses: valitydev/action-deploy-docker@v1.0.16
@@ -25,6 +48,7 @@ jobs:
           registry-access-token: ${{ secrets.github-token }}
 
   test-coverage:
+    if: ${{ github.event.inputs.ignore-coverage == 'false' }}
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout Repo
@@ -32,6 +56,10 @@ jobs:
 
       - name: Run Build Java
         uses: valitydev/action-jdk-build@v0.0.8
+        with:
+          jdk-version: ${{ inputs.java-version }}
+          jdk-distribution: ${{ inputs.java-distribution }}
+          mvn-args: ${{ inputs.mvn-args }}
 
       - name: Upload code coverage
         uses: codecov/codecov-action@v1
