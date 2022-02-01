@@ -38,7 +38,7 @@ jobs:
           mvn-args: ${{ inputs.mvn-args }}
 
   test-coverage:
-    if: ${{ github.event.inputs.ignore-coverage == 'false' }}
+    if: ${{ inputs.ignore-coverage == 'false' }}
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout Repo
