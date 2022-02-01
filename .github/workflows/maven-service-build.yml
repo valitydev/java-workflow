@@ -19,6 +19,7 @@ on:
         type: string
       ignore-coverage:
         description: 'Ignore test coverage step'
+        default: false
         required: false
         type: boolean
 
