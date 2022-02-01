@@ -23,7 +23,7 @@ on:
       deploy-secret-key-password:
         required: true
       mm-webhook-url:
-        required: false
+        required: true
 
 jobs:
   deploy:
@@ -59,21 +59,15 @@ jobs:
       - name: Upload code coverage
         uses: codecov/codecov-action@v1
 
-  check-secret:
-    runs-on: ubuntu-latest
-    outputs:
-      mm-secret: ${{ steps.mm-secret.outputs.defined }}
-    steps:
-      - id: mm-secret
-        if: "${{ env.MM-SECRET != '' }}"
-        run: echo "::set-output name=defined::true"
-        env:
-          MM-SECRET: ${{ secrets.mm-webhook-url }}
-
   notify:
     runs-on: ubuntu-20.04
-    needs: [build-and-deploy, check-secret]
-    if: needs.check-secret.outputs.mm-secret == 'true'
+    needs: deploy
     steps:
       - name: Mattermost Notification
-        run: echo notify-test
+        uses: rtCamp/action-slack-notify@v2.2.0
+        env:
+          SLACK_USERNAME: ${{ github.event.repository.name }}
+          SLACK_WEBHOOK: ${{ secrets.mm-webhook-url }}
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_LINK_NAMES: true
+          SLACK_FOOTER: ""
