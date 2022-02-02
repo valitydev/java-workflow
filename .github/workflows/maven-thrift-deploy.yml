@@ -39,7 +39,7 @@ jobs:
           maven-args: '-Dcommit.number=${{ steps.commit_info.outputs.COMMIT_NUMBER }} -Drevision="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}"'
   notify:
     runs-on: ubuntu-20.04
-    needs: [deploy-server, deploy-client]
+    needs: [deploy]
     steps:
       - name: Mattermost Notification
         uses: rtCamp/action-slack-notify@v2.2.0
