@@ -62,6 +62,7 @@ jobs:
   notify:
     runs-on: ubuntu-20.04
     needs: deploy
+    if: always()
     steps:
       - name: Mattermost Notification
         uses: rtCamp/action-slack-notify@v2.2.0
