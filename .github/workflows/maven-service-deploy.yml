@@ -43,11 +43,8 @@ jobs:
           registry-username: ${{ github.actor }}
           registry-access-token: ${{ secrets.github-token }}
 
-  notify:
-    runs-on: ubuntu-20.04
-    needs: build-and-deploy
-    steps:
       - name: Mattermost Notification
+        if: always()
         uses: rtCamp/action-slack-notify@v2.2.0
         env:
           SLACK_USERNAME: ${{ github.event.repository.name }}
