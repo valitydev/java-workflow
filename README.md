@@ -1,4 +1,4 @@
-# java-workflow
+## java-workflow
 
 В репозитории хранятся общие описания для сборок java/kotlin проектов.
 Сборка наших проектов бывает разной, в зависимости от типа собираемого проекта:
@@ -49,9 +49,9 @@ uses: valitydev/java-workflow/.github/workflows/maven-service-build.yml@v1
 `deploy.yml`
 ```yaml
 uses: valitydev/java-workflow/.github/workflows/maven-service-deploy.yml@v1
-  secrets:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
-    mm-webhook-url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
+secrets:
+  github-token: ${{ secrets.GITHUB_TOKEN }}
+  mm-webhook-url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
 ```
 ### Thrift
 `build.yml`
@@ -61,12 +61,12 @@ uses: valitydev/java-workflow/.github/workflows/maven-thrift-build.yml@v1
 `deploy.yml`
 ```yaml
 uses: valitydev/java-workflow/.github/workflows/maven-thrift-deploy.yml@v1
-  secrets:
-    server-username: ${{ secrets.OSSRH_USERNAME }}
-    server-password: ${{ secrets.OSSRH_TOKEN }}
-    deploy-secret-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
-    deploy-secret-key-password: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
-    mm-webhook-url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
+secrets:
+  server-username: ${{ secrets.OSSRH_USERNAME }}
+  server-password: ${{ secrets.OSSRH_TOKEN }}
+  deploy-secret-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
+  deploy-secret-key-password: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
+  mm-webhook-url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
 ```
 `erlang-build-verify.yml`
 ```yaml
@@ -80,12 +80,12 @@ uses: valitydev/java-workflow/.github/workflows/maven-library-build.yml@v1
 `deploy.yml`
 ```yaml
 uses: valitydev/java-workflow/.github/workflows/maven-library-deploy.yml@v1
-  secrets:
-    server-username: ${{ secrets.OSSRH_USERNAME }}
-    server-password: ${{ secrets.OSSRH_TOKEN }}
-    deploy-secret-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
-    deploy-secret-key-password: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
-    mm-webhook-url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
+secrets:
+  server-username: ${{ secrets.OSSRH_USERNAME }}
+  server-password: ${{ secrets.OSSRH_TOKEN }}
+  deploy-secret-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
+  deploy-secret-key-password: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
+  mm-webhook-url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
 ```
 ### Swag
 `build.yml`
@@ -95,11 +95,11 @@ uses: valitydev/java-workflow/.github/workflows/maven-swag-build.yml@v1
 `deploy.yml`
 ```yaml
 uses: valitydev/java-workflow/.github/workflows/maven-swag-deploy.yml@v1
-  secrets:
-    server-username: ${{ secrets.OSSRH_USERNAME }}
-    server-password: ${{ secrets.OSSRH_TOKEN }}
-    deploy-secret-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
-    deploy-secret-key-password: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
-    github-token: ${{ secrets.GITHUB_TOKEN }}
-    mm-webhook-url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
+secrets:
+  server-username: ${{ secrets.OSSRH_USERNAME }}
+  server-password: ${{ secrets.OSSRH_TOKEN }}
+  deploy-secret-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
+  deploy-secret-key-password: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
+  github-token: ${{ secrets.GITHUB_TOKEN }}
+  mm-webhook-url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
 ```
