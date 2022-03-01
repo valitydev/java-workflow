@@ -58,7 +58,7 @@ jobs:
           SLACK_LINK_NAMES: true
           SLACK_FOOTER: ""
   test-coverage:
-    if: ${{ github.event.inputs.ignore-coverage == 'false' }}
+    if: ${{ !inputs.ignore-coverage }}
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout Repo
