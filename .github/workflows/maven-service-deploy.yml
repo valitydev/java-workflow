@@ -17,6 +17,11 @@ on:
         description: 'Additional maven args'
         required: false
         type: string
+      ignore-coverage:
+        description: 'Ignore test coverage step'
+        default: false
+        required: false
+        type: boolean
     secrets:
       github-token:
         required: true
@@ -52,3 +57,19 @@ jobs:
           SLACK_COLOR: ${{ job.status }}
           SLACK_LINK_NAMES: true
           SLACK_FOOTER: ""
+  test-coverage:
+    if: ${{ github.event.inputs.ignore-coverage == 'false' }}
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Run Build Java
+        uses: valitydev/action-jdk-build@v0.0.8
+        with:
+          jdk-version: ${{ inputs.java-version }}
+          jdk-distribution: ${{ inputs.java-distribution }}
+          mvn-args: ${{ inputs.mvn-args }}
+
+      - name: Upload code coverage
+        uses: codecov/codecov-action@v2
