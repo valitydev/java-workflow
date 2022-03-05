@@ -40,6 +40,16 @@ jobs:
           deploy-secret-key: ${{ secrets.deploy-secret-key }}
           deploy-secret-key-password: ${{ secrets.deploy-secret-key-password }}
 
+      - name: Mattermost Notification
+        if: always()
+        uses: rtCamp/action-slack-notify@v2.2.0
+        env:
+          SLACK_USERNAME: ${{ github.event.repository.name }}
+          SLACK_WEBHOOK: ${{ secrets.mm-webhook-url }}
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_LINK_NAMES: true
+          SLACK_FOOTER: ""
+
   test-coverage:
     runs-on: ubuntu-20.04
     steps:
@@ -57,17 +67,4 @@ jobs:
         run: mvn --batch-mode clean verify
 
       - name: Upload code coverage
-        uses: codecov/codecov-action@v1
-
-  notify:
-    runs-on: ubuntu-20.04
-    needs: deploy
-    steps:
-      - name: Mattermost Notification
-        uses: rtCamp/action-slack-notify@v2.2.0
-        env:
-          SLACK_USERNAME: ${{ github.event.repository.name }}
-          SLACK_WEBHOOK: ${{ secrets.mm-webhook-url }}
-          SLACK_COLOR: ${{ job.status }}
-          SLACK_LINK_NAMES: true
-          SLACK_FOOTER: ""
+        uses: codecov/codecov-action@v2
