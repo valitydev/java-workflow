@@ -6,12 +6,17 @@ on:
       java-version:
         description: 'Java version'
         required: false
-        default: "15"
+        default: "17"
         type: string
       java-distribution:
         description: 'Java distribution'
         required: false
-        default: "adopt"
+        default: "temurin"
+        type: string
+      mvn-args:
+        description: 'Additional maven params'
+        required: false
+        default: ""
         type: string
     secrets:
       server-username:
@@ -30,7 +35,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Deploy package
         uses: valitydev/action-deploy-jdk-package@v1.0.14
@@ -39,6 +44,7 @@ jobs:
           server-password: ${{ secrets.server-password }}
           deploy-secret-key: ${{ secrets.deploy-secret-key }}
           deploy-secret-key-password: ${{ secrets.deploy-secret-key-password }}
+          mvn-args: ${{ inputs.mvn-args }}
 
       - name: Mattermost Notification
         if: always()
@@ -54,10 +60,10 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up JDK
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           java-version: ${{ inputs.java-version }}
           distribution: ${{ inputs.java-distribution }}
