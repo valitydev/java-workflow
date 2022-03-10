@@ -4,9 +4,14 @@ on:
   workflow_call:
     inputs:
       node-version:
-        description: 'Node version'
+        description: Node version
         required: false
         default: "16"
+        type: string
+      dist-directory:
+        description: Directory where bundled artifacts are built
+        required: false
+        default: "web_deploy"
         type: string
     secrets:
       server-username:
@@ -46,13 +51,13 @@ jobs:
       - name: Validate specification
         run: npm run validate
 
-      - name: Cache build
-        id: cache-build
-        uses: actions/cache@v2
+      - name: Upload specification bundle
+        uses: actions/upload-artifact@v3
         with:
-          path: |
-            web_deploy
-          key: ${{ runner.os }}-web-${{ github.sha }}
+          name: spec-bundle
+          path: ${{ inputs.dist-directory }}
+          if-no-files-found: error
+          retention-days: 7
 
   deploy-server:
     runs-on: ubuntu-20.04
@@ -61,13 +66,11 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
-      - name: Cache build
-        id: cache-build
-        uses: actions/cache@v2
+      - name: Download specification bundle
+        uses: actions/download-artifact@v3
         with:
-          path: |
-            web_deploy
-          key: ${{ runner.os }}-web-${{ github.sha }}
+          name: spec-bundle
+          path: ${{ inputs.dist-directory }}
 
       - name: Retrieve commit info
         run: |
@@ -90,18 +93,16 @@ jobs:
 
   deploy-client:
     runs-on: ubuntu-20.04
-    needs: [ build ]
+    needs: [build]
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
-      - name: Cache build
-        id: cache-build
-        uses: actions/cache@v2
+      - name: Download specification bundle
+        uses: actions/download-artifact@v3
         with:
-          path: |
-            web_deploy
-          key: ${{ runner.os }}-web-${{ github.sha }}
+          name: spec-bundle
+          path: ${{ inputs.dist-directory }}
 
       - name: Retrieve commit info
         run: |
@@ -124,31 +125,31 @@ jobs:
 
   publish-redoc:
     runs-on: ubuntu-20.04
-    needs: [ deploy-client, deploy-server ]
+    needs: [build]
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
-      - name: Cache build
-        id: cache-build
-        uses: actions/cache@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
         with:
-          path: |
-            web_deploy
-          key: ${{ runner.os }}-web-${{ github.sha }}
+          node-version: ${{ inputs.node-version }}
+          cache: npm
 
-      - name: Build static html
-        run: |
-          npx redoc-cli bundle web_deploy/openapi.yaml
-          mv redoc-static.html index.html
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Build static HTML
+        run: >
+          npm run redoc ||
+          $(npm bin)/redoc-cli bundle openapi/openapi.yaml -o dist/index.html
 
       - name: Publish ReDoc on Github Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.github-token }}
-          publish_dir: .
+          publish_dir: ./dist
           force_orphan: true
-          exclude_assets: '.github,openapi,plugins,web,.redocly.yaml,LICENSE,README.md,pom.xml,renovate.json,package.json,package-lock.json'
 
   success-notify:
     runs-on: ubuntu-20.04
