@@ -68,6 +68,9 @@ jobs:
 
       - name: Download specification bundle
         uses: actions/download-artifact@v3
+        with:
+          name: spec-bundle
+          path: ${{ inputs.dist-directory }}
 
       - name: Retrieve commit info
         run: |
@@ -97,6 +100,9 @@ jobs:
 
       - name: Download specification bundle
         uses: actions/download-artifact@v3
+        with:
+          name: spec-bundle
+          path: ${{ inputs.dist-directory }}
 
       - name: Retrieve commit info
         run: |
