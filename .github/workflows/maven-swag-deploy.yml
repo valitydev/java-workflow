@@ -112,7 +112,7 @@ jobs:
 
       - name: Set artifact version
         run: |
-          mvn versions:set versions:commit -DnewVersion="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}-client"
+          mvn --batch-mode versions:set versions:commit -DnewVersion="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}-client"
 
       - name: Deploy client package
         uses: valitydev/action-deploy-jdk-package@v1.0.13
