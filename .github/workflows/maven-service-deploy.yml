@@ -47,6 +47,7 @@ jobs:
         with:
           registry-username: ${{ github.actor }}
           registry-access-token: ${{ secrets.github-token }}
+          dockerfile-path: "./target/Dockerfile"
 
       - name: Mattermost Notification
         if: always()
