@@ -140,9 +140,17 @@ jobs:
         run: npm ci --ignore-scripts
 
       - name: Build static HTML
+        id: redoc_openapi
+        continue-on-error: true
         run: >
           npm run redoc ||
           $(npm bin)/redoc-cli bundle openapi/openapi.yaml -o dist/index.html
+
+      - name: Build static HTML (alternative way)
+        if: ${{ steps.redoc_openapi.conclusion == failure }}
+        run: >
+          npm run redoc ||
+          $(npm bin)/redoc-cli bundle web_deploy/openapi.yaml -o dist/index.html
 
       - name: Publish ReDoc on Github Pages
         uses: peaceiris/actions-gh-pages@v3
