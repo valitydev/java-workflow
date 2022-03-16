@@ -147,7 +147,7 @@ jobs:
           $(npm bin)/redoc-cli bundle openapi/openapi.yaml -o dist/index.html
 
       - name: Build static HTML (alternative way)
-        if: ${{ steps.redoc_openapi.conclusion == failure }}
+        if: ${{ steps.redoc_openapi.conclusion == 'failure' }}
         run: >
           npm run redoc ||
           $(npm bin)/redoc-cli bundle web_deploy/openapi.yaml -o dist/index.html
