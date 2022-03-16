@@ -139,21 +139,21 @@ jobs:
       - name: Install dependencies
         run: npm ci --ignore-scripts
 
-      - name: Build static HTML (main way)
+      - name: Build static HTML (main way - OpenAPI)
         id: redoc_openapi
         continue-on-error: true
         run: >
           npm run redoc ||
           $(npm bin)/redoc-cli bundle openapi/openapi.yaml -o dist/index.html
 
-      - name: Build static HTML (alternative way) - Download specification bundle
+      - name: Build static HTML (alternative way - Swagger) - Download specification bundle
         if: ${{ steps.redoc_openapi.outcome == 'failure' }}
         uses: actions/download-artifact@v3
         with:
           name: spec-bundle
           path: ${{ inputs.dist-directory }}
 
-      - name: Build static HTML (alternative way) - Launch redoc-cli
+      - name: Build static HTML (alternative way - Swagger) - Launch redoc-cli
         if: ${{ steps.redoc_openapi.outcome == 'failure' }}
         run: >
           npm run redoc ||
