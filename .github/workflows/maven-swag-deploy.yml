@@ -150,6 +150,7 @@ jobs:
         if: ${{ steps.redoc_openapi.outcome == 'failure' }}
         run: >
           npm run redoc ||
+          ls -l &&
           $(npm bin)/redoc-cli bundle web_deploy/swagger.yaml -o dist/index.html
 
       - name: Publish ReDoc on Github Pages
