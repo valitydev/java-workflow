@@ -65,6 +65,8 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Download specification bundle
         uses: actions/download-artifact@v3
@@ -97,6 +99,8 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Download specification bundle
         uses: actions/download-artifact@v3
