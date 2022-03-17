@@ -46,7 +46,7 @@ jobs:
           server-password: ${{ secrets.server-password }}
           deploy-secret-key: ${{ secrets.deploy-secret-key }}
           deploy-secret-key-password: ${{ secrets.deploy-secret-key-password }}
-          mvn-args: ${{ inputs.mvn-args }}
+          maven-args: ${{ inputs.mvn-args }}
 
       - name: Mattermost Notification
         if: always()
