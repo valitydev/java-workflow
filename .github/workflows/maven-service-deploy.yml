@@ -43,10 +43,12 @@ jobs:
           mvn-args: ${{ inputs.mvn-args }}
 
       - name: Deploy image
-        uses: valitydev/action-deploy-docker@v1.0.17
+        uses: valitydev/action-deploy-docker@v2.0.2
         with:
           registry-username: ${{ github.actor }}
           registry-access-token: ${{ secrets.github-token }}
+          context-path: "./target"
+          dockerfile-path: "./target/Dockerfile"
 
       - name: Mattermost Notification
         if: always()
