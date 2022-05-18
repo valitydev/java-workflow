@@ -4,19 +4,14 @@ on:
   workflow_call:
     inputs:
       node-version:
-        description: 'Node version'
+        description: Node version
         required: false
         default: "16"
         type: string
-      java-version:
-        description: 'Java version'
+      dist-directory:
+        description: Directory where bundled artifacts are built
         required: false
-        default: "17"
-        type: string
-      java-distribution:
-        description: 'Java distribution'
-        required: false
-        default: "temurin"
+        default: "web_deploy"
         type: string
     secrets:
       server-username:
@@ -37,7 +32,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
@@ -56,13 +51,13 @@ jobs:
       - name: Validate specification
         run: npm run validate
 
-      - name: Cache build
-        id: cache-build
-        uses: actions/cache@v2
+      - name: Upload specification bundle
+        uses: actions/upload-artifact@v3
         with:
-          path: |
-            web_deploy
-          key: ${{ runner.os }}-web-${{ github.sha }}
+          name: spec-bundle
+          path: ${{ inputs.dist-directory }}
+          if-no-files-found: error
+          retention-days: 7
 
   deploy-server:
     runs-on: ubuntu-20.04
@@ -70,14 +65,14 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
-
-      - name: Cache build
-        id: cache-build
-        uses: actions/cache@v2
         with:
-          path: |
-            web_deploy
-          key: ${{ runner.os }}-web-${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Download specification bundle
+        uses: actions/download-artifact@v3
+        with:
+          name: spec-bundle
+          path: ${{ inputs.dist-directory }}
 
       - name: Retrieve commit info
         run: |
@@ -92,8 +87,6 @@ jobs:
       - name: Deploy server package
         uses: valitydev/action-deploy-jdk-package@v1.0.14
         with:
-          jdk-version: ${{ inputs.java-version }}
-          java-distribution: ${{ inputs.java-distribution }}
           server-username: ${{ secrets.server-username }}
           server-password: ${{ secrets.server-password }}
           deploy-secret-key: ${{ secrets.deploy-secret-key }}
@@ -102,18 +95,18 @@ jobs:
 
   deploy-client:
     runs-on: ubuntu-20.04
-    needs: [ build ]
+    needs: [build]
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
-
-      - name: Cache build
-        id: cache-build
-        uses: actions/cache@v2
         with:
-          path: |
-            web_deploy
-          key: ${{ runner.os }}-web-${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Download specification bundle
+        uses: actions/download-artifact@v3
+        with:
+          name: spec-bundle
+          path: ${{ inputs.dist-directory }}
 
       - name: Retrieve commit info
         run: |
@@ -123,13 +116,11 @@ jobs:
 
       - name: Set artifact version
         run: |
-          mvn versions:set versions:commit -DnewVersion="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}-client"
+          mvn --batch-mode versions:set versions:commit -DnewVersion="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}-client"
 
       - name: Deploy client package
         uses: valitydev/action-deploy-jdk-package@v1.0.14
         with:
-          jdk-version: ${{ inputs.java-version }}
-          java-distribution: ${{ inputs.java-distribution }}
           server-username: ${{ secrets.server-username }}
           server-password: ${{ secrets.server-password }}
           deploy-secret-key: ${{ secrets.deploy-secret-key }}
@@ -138,31 +129,46 @@ jobs:
 
   publish-redoc:
     runs-on: ubuntu-20.04
-    needs: [ deploy-client, deploy-server ]
+    needs: [build]
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
 
-      - name: Cache build
-        id: cache-build
-        uses: actions/cache@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
         with:
-          path: |
-            web_deploy
-          key: ${{ runner.os }}-web-${{ github.sha }}
+          node-version: ${{ inputs.node-version }}
+          cache: npm
 
-      - name: Build static html
-        run: |
-          npx redoc-cli bundle web_deploy/openapi.yaml
-          mv redoc-static.html index.html
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Build static HTML (main way - OpenAPI)
+        id: redoc_openapi
+        continue-on-error: true
+        run: >
+          npm run redoc ||
+          $(npm bin)/redoc-cli bundle openapi/openapi.yaml -o dist/index.html
+
+      - name: Build static HTML (alternative way - Swagger) - Download specification bundle
+        if: ${{ steps.redoc_openapi.outcome == 'failure' }}
+        uses: actions/download-artifact@v3
+        with:
+          name: spec-bundle
+          path: ${{ inputs.dist-directory }}
+
+      - name: Build static HTML (alternative way - Swagger) - Launch redoc-cli
+        if: ${{ steps.redoc_openapi.outcome == 'failure' }}
+        run: >
+          npm run redoc ||
+          $(npm bin)/redoc-cli bundle web_deploy/swagger.yaml -o dist/index.html
 
       - name: Publish ReDoc on Github Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.github-token }}
-          publish_dir: .
+          publish_dir: ./dist
           force_orphan: true
-          exclude_assets: '.github,openapi,plugins,web,.redocly.yaml,LICENSE,README.md,pom.xml,renovate.json,package.json,package-lock.json'
 
   success-notify:
     runs-on: ubuntu-20.04
