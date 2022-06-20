@@ -147,7 +147,6 @@ jobs:
         id: redoc_openapi
         continue-on-error: true
         run: >
-          npm run redoc ||
           $(npm bin)/redoc-cli bundle openapi/openapi.yaml -o dist/index.html
 
       - name: Build static HTML (alternative way - Swagger) - Download specification bundle
@@ -160,7 +159,6 @@ jobs:
       - name: Build static HTML (alternative way - Swagger) - Launch redoc-cli
         if: ${{ steps.redoc_openapi.outcome == 'failure' }}
         run: >
-          npm run redoc ||
           $(npm bin)/redoc-cli bundle web_deploy/swagger.yaml -o dist/index.html
 
       - name: Publish ReDoc on Github Pages
