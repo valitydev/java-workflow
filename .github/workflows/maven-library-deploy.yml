@@ -6,12 +6,12 @@ on:
       java-version:
         description: 'Java version'
         required: false
-        default: "17"
+        default: "15"
         type: string
       java-distribution:
         description: 'Java distribution'
         required: false
-        default: "temurin"
+        default: "adopt"
         type: string
       mvn-args:
         description: 'Additional maven params'
