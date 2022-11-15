@@ -13,6 +13,16 @@ on:
         required: false
         default: "adopt"
         type: string
+      mvn-options:
+        description: 'Additional maven options'
+        required: false
+        default: ""
+        type: string
+      mvn-args:
+        description: 'Additional maven args'
+        required: false
+        default: ""
+        type: string
 
 jobs:
   build:
@@ -29,7 +39,11 @@ jobs:
           cache: 'maven'
 
       - name: Maven Compile
-        run: mvn --batch-mode clean compile
+        run: |
+          mvn \
+            --no-transfer-progress \
+            --batch-mode ${{ inputs.mvn-options }} \
+            clean compile ${{ inputs.mvn-args }}
 
   test-coverage:
     runs-on: ubuntu-20.04
@@ -45,7 +59,11 @@ jobs:
           cache: 'maven'
 
       - name: Maven Verify
-        run: mvn --batch-mode clean verify
+        run: |
+          mvn \
+            --no-transfer-progress \
+            --batch-mode ${{ inputs.mvn-options }} \
+            clean verify ${{ inputs.mvn-args }}
 
       - name: Upload code coverage
         uses: codecov/codecov-action@v3

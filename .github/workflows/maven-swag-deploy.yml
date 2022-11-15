@@ -37,7 +37,7 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ inputs.node-version }}
           cache: npm
@@ -85,7 +85,7 @@ jobs:
           mvn versions:set versions:commit -DnewVersion="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}-server"
 
       - name: Deploy server package
-        uses: valitydev/action-deploy-jdk-package@v1.0.13
+        uses: valitydev/action-deploy-jdk-package@v1.0.14
         with:
           server-username: ${{ secrets.server-username }}
           server-password: ${{ secrets.server-password }}
@@ -119,7 +119,7 @@ jobs:
           mvn --batch-mode versions:set versions:commit -DnewVersion="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}-client"
 
       - name: Deploy client package
-        uses: valitydev/action-deploy-jdk-package@v1.0.13
+        uses: valitydev/action-deploy-jdk-package@v1.0.14
         with:
           server-username: ${{ secrets.server-username }}
           server-password: ${{ secrets.server-password }}

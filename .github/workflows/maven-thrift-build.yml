@@ -6,12 +6,12 @@ on:
       java-version:
         description: 'Java version'
         required: false
-        default: "15"
+        default: "17"
         type: string
       java-distribution:
         description: 'Java distribution'
         required: false
-        default: "adopt"
+        default: "temurin"
         type: string
 
 jobs:
@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Install thrift
-        uses: valitydev/action-setup-thrift@v0.0.5
+        uses: valitydev/action-setup-thrift@v1.0.0
       - name: Checkout Repo
         uses: actions/checkout@v3
         with:
