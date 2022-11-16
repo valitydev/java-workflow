@@ -38,7 +38,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Deploy package
-        uses: valitydev/action-deploy-jdk-package@v1.0.14
+        uses: valitydev/action-deploy-jdk-package@v1.0.18
         with:
           jdk-version: ${{ inputs.java-version }}
           jdk-distribution: ${{ inputs.java-distribution }}
