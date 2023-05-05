@@ -53,6 +53,12 @@ jobs:
       - name: Build client jar
         run: mvn --batch-mode clean package -f pom.xml -P="client"
       
+  dependency-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout Repository'
+        uses: actions/checkout@v3
+        
       - name: Dependency Review
         uses: actions/dependency-review-action@v3
         with:
