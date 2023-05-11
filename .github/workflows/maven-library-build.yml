@@ -67,3 +67,16 @@ jobs:
 
       - name: Upload code coverage
         uses: codecov/codecov-action@v3
+
+ dependency-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout Repository'
+        uses: actions/checkout@v3
+
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v3
+        with:
+          fail-on-severity: critical
+          vulnerability-check: true
+          comment-summary-in-pr: true
