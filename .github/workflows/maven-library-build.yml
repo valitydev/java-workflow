@@ -68,7 +68,7 @@ jobs:
       - name: Upload code coverage
         uses: codecov/codecov-action@v3
 
- dependency-check:
+  dependency-check:
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout Repository'
