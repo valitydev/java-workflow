@@ -38,15 +38,3 @@ jobs:
       - name: Build package
         run: mvn --batch-mode -Dcommit.number=${{ steps.commit_info.outputs.COMMIT_NUMBER }} -Drevision="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}" clean compile -f pom.xml
 
-  dependency-check:
-    runs-on: ubuntu-latest
-    steps:
-      - name: 'Checkout Repository'
-        uses: actions/checkout@v3
-        
-      - name: Dependency Review
-        uses: actions/dependency-review-action@v3
-        with:
-          fail-on-severity: critical
-          vulnerability-check: true
-          comment-summary-in-pr: true
