@@ -43,7 +43,13 @@ jobs:
           mvn \
             --no-transfer-progress \
             --batch-mode ${{ inputs.mvn-options }} \
-            clean compile ${{ inputs.mvn-args }}
+            clean compile site ${{ inputs.mvn-args }}
+
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v3
+        with:
+          name: bom.json
+          path: 'target/bom.json'
 
   test-coverage:
     runs-on: ubuntu-20.04
@@ -67,3 +73,19 @@ jobs:
 
       - name: Upload code coverage
         uses: codecov/codecov-action@v3
+
+  scan:
+    name: Scan with Trivy
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Trivy CLI
+        run: |
+          wget https://github.com/aquasecurity/trivy/releases/download/v0.39.1/trivy_0.39.1_Linux-64bit.deb
+          sudo dpkg -i trivy_0.39.1_Linux-64bit.deb
+      - uses: actions/download-artifact@v3
+        with:
+          name: bom.json
+      - name: Run Trivy with SBOM
+        run: trivy sbom --exit-code 1 --severity CRITICAL,HIGH ./bom.json

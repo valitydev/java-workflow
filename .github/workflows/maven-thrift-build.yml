@@ -36,5 +36,26 @@ jobs:
           echo "::set-output name=SHA_7::${GITHUB_SHA::7}"
         id: commit_info
       - name: Build package
-        run: mvn --batch-mode -Dcommit.number=${{ steps.commit_info.outputs.COMMIT_NUMBER }} -Drevision="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}" clean compile -f pom.xml
+        run: mvn --batch-mode -Dcommit.number=${{ steps.commit_info.outputs.COMMIT_NUMBER }} -Drevision="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}" clean compile site -f pom.xml
 
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v3
+        with:
+          name: bom.json
+          path: 'target/bom.json'
+
+  scan:
+    name: Scan with Trivy
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Trivy CLI
+        run: |
+          wget https://github.com/aquasecurity/trivy/releases/download/v0.39.1/trivy_0.39.1_Linux-64bit.deb
+          sudo dpkg -i trivy_0.39.1_Linux-64bit.deb
+      - uses: actions/download-artifact@v3
+        with:
+          name: bom.json
+      - name: Run Trivy with SBOM
+        run: trivy sbom --exit-code 1 --severity CRITICAL,HIGH ./bom.json
