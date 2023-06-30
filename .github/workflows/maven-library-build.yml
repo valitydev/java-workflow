@@ -43,7 +43,7 @@ jobs:
           mvn \
             --no-transfer-progress \
             --batch-mode ${{ inputs.mvn-options }} \
-            clean compile site ${{ inputs.mvn-args }}
+            clean compile site
 
       - name: Upload SBOM
         uses: actions/upload-artifact@v3
