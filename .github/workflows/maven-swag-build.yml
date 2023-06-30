@@ -48,10 +48,10 @@ jobs:
         run: npm run validate
 
       - name: Build server jar
-        run: mvn --batch-mode clean package site -f pom.xml -P="server"
+        run: mvn --batch-mode site clean package -f pom.xml -P="server"
 
       - name: Build client jar
-        run: mvn --batch-mode clean package site -f pom.xml -P="client"
+        run: mvn --batch-mode site clean package -f pom.xml -P="client"
 
   scan:
     name: Scan with Trivy
