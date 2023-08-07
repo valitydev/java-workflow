@@ -127,47 +127,6 @@ jobs:
           deploy-secret-key-password: ${{ secrets.deploy-secret-key-password }}
           maven-args: '-Dcommit.number=${{ steps.commit_info.outputs.COMMIT_NUMBER }} -Drevision="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}-client" -P="client"'
 
-  publish-redoc:
-    runs-on: ubuntu-20.04
-    needs: [build]
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ inputs.node-version }}
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci --ignore-scripts
-
-      - name: Build static HTML (main way - OpenAPI)
-        id: redoc_openapi
-        continue-on-error: true
-        run: >
-          $(npm bin)/redoc-cli bundle openapi/openapi.yaml -o dist/index.html
-
-      - name: Build static HTML (alternative way - Swagger) - Download specification bundle
-        if: ${{ steps.redoc_openapi.outcome == 'failure' }}
-        uses: actions/download-artifact@v3
-        with:
-          name: spec-bundle
-          path: ${{ inputs.dist-directory }}
-
-      - name: Build static HTML (alternative way - Swagger) - Launch redoc-cli
-        if: ${{ steps.redoc_openapi.outcome == 'failure' }}
-        run: >
-          $(npm bin)/redoc-cli bundle web_deploy/swagger.yaml -o dist/index.html
-
-      - name: Publish ReDoc on Github Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.github-token }}
-          publish_dir: ./dist
-          force_orphan: true
-
   success-notify:
     runs-on: ubuntu-20.04
     needs: [deploy-server, deploy-client]
