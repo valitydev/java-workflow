@@ -44,7 +44,7 @@ jobs:
           mvn-args: ${{ inputs.mvn-args }}
 
       - name: Deploy image
-        uses: valitydev/action-deploy-docker@v2.0.11
+        uses: valitydev/action-deploy-docker@v2.0.12
         with:
           registry-username: ${{ github.actor }}
           registry-access-token: ${{ secrets.github-token }}
@@ -53,7 +53,7 @@ jobs:
 
       - name: Mattermost Notification
         if: always()
-        uses: rtCamp/action-slack-notify@v2.2.0
+        uses: rtCamp/action-slack-notify@v2.2.1
         env:
           SLACK_USERNAME: ${{ github.event.repository.name }}
           SLACK_WEBHOOK: ${{ secrets.mm-webhook-url }}
