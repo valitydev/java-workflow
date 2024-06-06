@@ -1,8 +1,6 @@
 name: Run Semgrep
 on:
-  push:
-    branches:
-      - '*'
+  workflow_call:
 
 jobs:
   semgrep:
