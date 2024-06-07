@@ -6,10 +6,16 @@
  - Thrift  - собираем thrift протокол и деплоим в maven central
  - Library - собираем библиотеку и деплоим в maven central
  - Swag    - собираем openapi, деплоим в maven central и публикуем в github pages
+
+ Инструменты для сканирование:
+ - Semgrep - сканирует по дефолтным правилам и выводит отчет в формате Sarif
  
 Чтобы начать использовать java-workflow в своем репозитории - добавьте в директорию `/.github/workflows/` файлы
 `build.yml` и `deploy.yml`, файлов описания workflow не обязательно должно быть два, вы можете самостоятельно описать workflow с использованием `java-workflow`.
 Ниже приведен пример для `service` типа проекта. Аналогично и для других типов, изменяется только название файла и передаваемые параметры.
+
+ Для сканирования проектов - инструмент Semgrep.
+ Чтобы начать использовать - добавьте в директорию файл `semgrep-scan.yml`
 
 `build.yml`
 ```yaml
@@ -102,4 +108,10 @@ secrets:
   deploy-secret-key-password: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
   github-token: ${{ secrets.GITHUB_TOKEN }}
   mm-webhook-url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
+```
+
+### Semgrep scan
+`semgrep-scan.yml`
+```yaml
+uses: valitydev/java-workflow/.github/workflows/semgrep-scan.yml@sec-24
 ```
