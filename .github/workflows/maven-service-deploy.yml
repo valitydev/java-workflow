@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Run Build Java
         uses: valitydev/action-jdk-build@v0.0.14
@@ -65,7 +65,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Run Build Java
         uses: valitydev/action-jdk-build@v0.0.14
