@@ -20,16 +20,10 @@ jobs:
             --config="p/default"
 
       - name: Save report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: semgrep_result
           path: semgrep.json
-
-      - name: Scanning alerts
-        uses: github/codeql-action/upload-sarif@v3.25.7
-        with:
-          sarif_file: semgrep.json
-          category: semgrep
 
       - name: Check & Update/Create PR
         id: pr-check
