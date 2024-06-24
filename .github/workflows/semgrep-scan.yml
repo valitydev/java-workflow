@@ -44,7 +44,7 @@ jobs:
                 repo: context.repo.repo,
                 title: `Semgrep results for ${branchName}`,
                 head: branchName,
-                base: 'main', // Update to your default branch
+                base: 'master', // Update to your default branch
                 body: 'This PR contains Semgrep analysis results.',
               });
               pr = newPr;
