@@ -30,13 +30,18 @@ jobs:
         uses: actions/github-script@v3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: | 
+          script: |
+            const { context, github, core } = require('@actions/github-script');
             const { data: pullRequests } = await github.pulls.list({
               owner: context.repo.owner,
               repo: context.repo.repo,
               state: 'open',
             });
-            const branchName = context.ref.replace('refs/heads/', '');
+            const branchName = context.head_ref || context.ref.replace('refs/heads/', '');
+            if (!branchName) {
+              throw new Error('Cannot determine branch name');
+            }
+            const baseName = 'master';
             let pr = pullRequests.find(pr => pr.head.ref === branchName);
             if (!pr) {
               const { data: newPr } = await github.pulls.create({
@@ -44,13 +49,12 @@ jobs:
                 repo: context.repo.repo,
                 title: `Semgrep results for ${branchName}`,
                 head: branchName,
-                base: 'master', // Update to your default branch
+                base: baseName,
                 body: 'This PR contains Semgrep analysis results.',
               });
               pr = newPr;
             }
             core.setOutput("prNumber", pr.number);
-              
       - name: Add Comment with Semgrep Results
         if: steps.pr-check.outputs.prNumber != 'null'
         uses: actions/github-script@v3
@@ -59,10 +63,10 @@ jobs:
           script: |
             const fs = require('fs');
             const semgrepResults = fs.readFileSync('semgrep.json', 'utf8');
-            const prNumber = "${{ steps.pr-check.outputs.prNumber }}";
+            const prNumber = parseInt("${{ steps.pr-check.outputs.prNumber }}", 10);
             await github.issues.createComment({
               issue_number: prNumber,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: `Semgrep analysis results:\n\`\`\`json\n${semgrepResults}\n\`\`\``,
-               });
+            });
