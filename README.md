@@ -113,5 +113,16 @@ secrets:
 ### Semgrep scan
 `semgrep-scan.yml`
 ```yaml
-uses: valitydev/java-workflow/.github/workflows/semgrep-scan.yml@sec-24
+name: Run Semgrep
+
+on:
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  build:
+    uses: valitydev/java-workflow/.github/workflows/semgrep-scan.yml@v1
+    secrets:
+      mm-sa-wh-url: ${{ secrets.MATTERMOST_SA_WH_URL}}
 ```
