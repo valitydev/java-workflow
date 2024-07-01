@@ -15,54 +15,28 @@ jobs:
       - name: Run Semgrep
         run: | 
           semgrep \
-            --json --output semgrep.json \
+            --sarif --output semgrep.sarif \
             --metrics=off \
             --config="p/default"
 
       - name: Save report
         uses: actions/upload-artifact@v4
         with:
-          name: semgrep_result
-          path: semgrep.json
+          name: semgrep.sarif
+          path: semgrep.sarif
 
-      - name: Check & Update/Create PR
-        id: pr-check
-        uses: actions/github-script@v3
+      - name: Scanning alerts
+        uses: github/codeql-action/upload-sarif@v3.25.7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: | 
-            const { data: pullRequests } = await github.pulls.list({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              state: 'open',
-            });
-            const branchName = context.ref.replace('refs/heads/', '');
-            let pr = pullRequests.find(pr => pr.head.ref === branchName);
-            if (!pr) {
-              const { data: newPr } = await github.pulls.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title: `Semgrep results for ${branchName}`,
-                head: branchName,
-                base: 'main', // Update to your default branch
-                body: 'This PR contains Semgrep analysis results.',
-              });
-              pr = newPr;
-            }
-            core.setOutput("prNumber", pr.number);
-          
-      - name: Add Comment with Semgrep Results
-        if: steps.pr-check.outputs.prNumber != 'null'
-        uses: actions/github-script@v3
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const fs = require('fs');
-            const semgrepResults = fs.readFileSync('semgrep.json', 'utf8');
-            const prNumber = "${{ steps.pr-check.outputs.prNumber }}";
-            await github.issues.createComment({
-              issue_number: prNumber,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `Semgrep analysis results:\n\`\`\`json\n${semgrepResults}\n\`\`\``,
-               });
+          sarif_file: semgrep.sarif
+          category: semgrep
+
+      - name: Mattermost Notification
+        if: always()
+        uses: rtCamp/action-slack-notify@v2.2.0
+        env:
+          SLACK_USERNAME: ${{ github.event.repository.name }}
+          SLACK_WEBHOOK: ${{ secrets.mm-sa-wh-url }}
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_LINK_NAMES: true
+          SLACK_FOOTER: ""  
