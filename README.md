@@ -121,7 +121,7 @@ on:
       - '*'
 
 jobs:
-  build:
+  scan:
     uses: valitydev/java-workflow/.github/workflows/semgrep-scan.yml@v1
     secrets:
       mm-sa-wh-url: ${{ secrets.MATTERMOST_SA_WH_URL}}
