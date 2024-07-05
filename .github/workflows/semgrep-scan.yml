@@ -20,7 +20,7 @@ jobs:
             --config="p/default"
 
       - name: Save report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: semgrep.sarif
           path: semgrep.sarif
@@ -30,3 +30,13 @@ jobs:
         with:
           sarif_file: semgrep.sarif
           category: semgrep
+
+      - name: Mattermost Notification
+        if: always()
+        uses: rtCamp/action-slack-notify@v2.2.0
+        env:
+          SLACK_USERNAME: ${{ github.event.repository.name }}
+          SLACK_WEBHOOK: ${{ secrets.mm-sa-wh-url }}
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_LINK_NAMES: true
+          SLACK_FOOTER: ""  
