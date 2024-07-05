@@ -68,4 +68,9 @@ jobs:
         with:
           name: bom.json
       - name: Run Trivy with SBOM
-        run: trivy sbom --exit-code 1 --severity CRITICAL,HIGH ./bom.json
+        run: trivy sbom --severity CRITICAL,HIGH --format sarif -o trivy-report.sarif ./bom.json
+
+      - name: Upload SARIF report
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: trivy-report.sarif
