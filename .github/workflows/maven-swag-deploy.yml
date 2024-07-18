@@ -52,7 +52,7 @@ jobs:
         run: npm run validate
 
       - name: Upload specification bundle
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: spec-bundle
           path: ${{ inputs.dist-directory }}
@@ -69,7 +69,7 @@ jobs:
           fetch-depth: 0
 
       - name: Download specification bundle
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: spec-bundle
           path: ${{ inputs.dist-directory }}
@@ -103,7 +103,7 @@ jobs:
           fetch-depth: 0
 
       - name: Download specification bundle
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: spec-bundle
           path: ${{ inputs.dist-directory }}
