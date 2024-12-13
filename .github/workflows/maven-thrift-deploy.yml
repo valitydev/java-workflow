@@ -27,7 +27,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Install thrift
         uses: valitydev/action-setup-thrift@v1.0.3
@@ -51,7 +51,7 @@ jobs:
           deploy-secret-key-password: ${{ secrets.deploy-secret-key-password }}
           maven-args: '-Dcommit.number=${{ steps.commit_info.outputs.COMMIT_NUMBER }} -Drevision="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}"'
   notify:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs: [deploy]
     steps:
       - name: Mattermost Notification
