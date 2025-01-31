@@ -44,7 +44,7 @@ jobs:
           mvn-args: ${{ inputs.mvn-args }}
 
       - name: Deploy image
-        uses: valitydev/action-deploy-docker@v2.0.11
+        uses: valitydev/action-deploy-docker@v2.0.19
         with:
           registry-username: ${{ github.actor }}
           registry-access-token: ${{ secrets.github-token }}
