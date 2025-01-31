@@ -64,7 +64,7 @@ jobs:
         run: |
           wget https://github.com/aquasecurity/trivy/releases/download/v0.39.1/trivy_0.39.1_Linux-64bit.deb
           sudo dpkg -i trivy_0.39.1_Linux-64bit.deb
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: bom.json
       - name: Run Trivy with SBOM
