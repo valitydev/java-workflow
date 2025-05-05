@@ -19,22 +19,19 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Install thrift
-        uses: valitydev/action-setup-thrift@v1.0.3
+        uses: valitydev/action-setup-thrift@v1.0.6
+
       - name: Checkout Repo
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - name: Set up Maven
         uses: actions/setup-java@v4
         with:
           java-version: ${{ inputs.java-version }}
           distribution: ${{ inputs.java-distribution }}
           cache: 'maven'
-      - name: Retrieve commit info
-        run: |
-          echo "::set-output name=COMMIT_NUMBER::$(git rev-list HEAD --count)"
-          echo "::set-output name=SHA_7::${GITHUB_SHA::7}"
-        id: commit_info
-      - name: Build package
-        run: mvn --batch-mode -Dcommit.number=${{ steps.commit_info.outputs.COMMIT_NUMBER }} -Drevision="1.${{ steps.commit_info.outputs.COMMIT_NUMBER }}-${{ steps.commit_info.outputs.SHA_7 }}" clean compile -f pom.xml
 
+      - name: Build packages
+        run: mvn -B clean verify

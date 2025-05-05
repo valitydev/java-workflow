@@ -60,6 +60,7 @@ jobs:
           SLACK_COLOR: ${{ job.status }}
           SLACK_LINK_NAMES: true
           SLACK_FOOTER: ""
+
   test-coverage:
     if: ${{ !inputs.ignore-coverage }}
     runs-on: ubuntu-22.04

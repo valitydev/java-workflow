@@ -56,17 +56,20 @@ jobs:
 
   scan:
     name: Scan with Trivy
-    needs: build
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Install Trivy CLI
         run: |
           wget https://github.com/aquasecurity/trivy/releases/download/v0.39.1/trivy_0.39.1_Linux-64bit.deb
           sudo dpkg -i trivy_0.39.1_Linux-64bit.deb
+
       - uses: actions/download-artifact@v4
         with:
           name: bom.json
+
       - name: Run Trivy with SBOM
         run: trivy sbom --severity CRITICAL,HIGH --format sarif -o trivy-report.sarif ./bom.json
 

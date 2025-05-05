@@ -52,4 +52,3 @@ jobs:
 
       - name: Build client jar
         run: mvn --batch-mode clean package -f pom.xml -P="client"
-

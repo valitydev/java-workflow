@@ -13,11 +13,6 @@ on:
         required: false
         default: "temurin"
         type: string
-      mvn-args:
-        description: 'Additional maven params'
-        required: false
-        default: ""
-        type: string
     secrets:
       server-username:
         required: true
@@ -37,6 +32,10 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
+      - name: Retrieve commit info
+        id: commit_info
+        uses: ./.github/actions/commit-info
+
       - name: Deploy package
         uses: valitydev/action-deploy-jdk-package@v1.0.20
         with:
@@ -46,7 +45,7 @@ jobs:
           server-password: ${{ secrets.server-password }}
           deploy-secret-key: ${{ secrets.deploy-secret-key }}
           deploy-secret-key-password: ${{ secrets.deploy-secret-key-password }}
-          maven-args: ${{ inputs.mvn-args }}
+          maven-args: '-Dcommit.number=${{ env.COMMIT_NUMBER }} -Drevision=${{ env.REVISION }}'
 
       - name: Mattermost Notification
         if: always()
