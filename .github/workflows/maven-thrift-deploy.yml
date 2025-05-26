@@ -27,7 +27,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Install thrift
         uses: valitydev/action-setup-thrift@v1.0.3
@@ -53,7 +53,7 @@ jobs:
           maven-args: '-Dcommit.number=${{ env.COMMIT_NUMBER }} -Drevision=${{ env.REVISION }}'
 
   notify:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: [deploy]
     steps:
       - name: Mattermost Notification
