@@ -33,5 +33,9 @@ jobs:
           distribution: ${{ inputs.java-distribution }}
           cache: 'maven'
 
+      - name: Retrieve commit info
+        id: commit_info
+        uses: valitydev/java-workflow/.github/actions/commit-info@v3
+
       - name: Build packages
-        run: mvn -B clean verify
+        run: mvn -B clean verify -Dcommit.number=${{ env.COMMIT_NUMBER }}
