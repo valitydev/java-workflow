@@ -11,17 +11,17 @@ on:
       dist-directory:
         description: Directory where bundled artifacts are built
         required: false
-        default: "web_deploy"
+        default: "dist"
         type: string
       java-version:
         description: 'Java version'
         required: false
-        default: "15"
+        default: "21"
         type: string
       java-distribution:
         description: 'Java distribution'
         required: false
-        default: "adopt"
+        default: "temurin"
         type: string
     secrets:
       server-username:
