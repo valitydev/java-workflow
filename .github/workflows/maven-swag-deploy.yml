@@ -88,6 +88,10 @@ jobs:
         id: commit_info
         uses: valitydev/java-workflow/.github/actions/commit-info@v3
 
+      - name: Set artifact version
+        run: |
+          mvn versions:set versions:commit -DnewVersion="${{ steps.commit_info.outputs.REVISION }}-server"
+
       - name: Deploy package
         uses: valitydev/action-deploy-jdk-package@v1.0.20
         with:
@@ -117,6 +121,10 @@ jobs:
       - name: Retrieve commit info
         id: commit_info
         uses: valitydev/java-workflow/.github/actions/commit-info@v3
+
+      - name: Set artifact version
+        run: |
+          mvn versions:set versions:commit -DnewVersion="${{ steps.commit_info.outputs.REVISION }}-client"
 
       - name: Deploy package
         uses: valitydev/action-deploy-jdk-package@v1.0.20
