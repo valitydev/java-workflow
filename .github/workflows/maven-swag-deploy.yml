@@ -90,7 +90,7 @@ jobs:
 
       - name: Set artifact version
         run: |
-          mvn versions:set versions:commit -DnewVersion="${{ steps.commit_info.outputs.REVISION }}-server"
+          mvn versions:set versions:commit -DnewVersion="${{ env.REVISION }}-server"
 
       - name: Deploy package
         uses: valitydev/action-deploy-jdk-package@v1.0.20
@@ -124,7 +124,7 @@ jobs:
 
       - name: Set artifact version
         run: |
-          mvn versions:set versions:commit -DnewVersion="${{ steps.commit_info.outputs.REVISION }}-client"
+          mvn versions:set versions:commit -DnewVersion="${{ env.REVISION }}-client"
 
       - name: Deploy package
         uses: valitydev/action-deploy-jdk-package@v1.0.20
