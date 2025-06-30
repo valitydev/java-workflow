@@ -11,7 +11,7 @@ on:
       dist-directory:
         description: Directory where bundled artifacts are built
         required: false
-        default: "dist"
+        default: "web_deploy"
         type: string
       java-version:
         description: 'Java version'
