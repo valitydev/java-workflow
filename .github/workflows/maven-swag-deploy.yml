@@ -97,7 +97,7 @@ jobs:
           server-password: ${{ secrets.server-password }}
           deploy-secret-key: ${{ secrets.deploy-secret-key }}
           deploy-secret-key-password: ${{ secrets.deploy-secret-key-password }}
-          maven-args: '-Dcommit.number=${{ env.COMMIT_NUMBER }} -Drevision="server-${{ env.REVISION }}" -P="server"'
+          maven-args: '-Dcommit.number=${{ env.COMMIT_NUMBER }} -Drevision="${{ env.REVISION }}" -P="server"'
 
   deploy-client:
     runs-on: ubuntu-22.04
@@ -127,7 +127,7 @@ jobs:
           server-password: ${{ secrets.server-password }}
           deploy-secret-key: ${{ secrets.deploy-secret-key }}
           deploy-secret-key-password: ${{ secrets.deploy-secret-key-password }}
-          maven-args: '-Dcommit.number=${{ env.COMMIT_NUMBER }} -Drevision="client-${{ env.REVISION }}" -P="client"'
+          maven-args: '-Dcommit.number=${{ env.COMMIT_NUMBER }} -Drevision="${{ env.REVISION }}" -P="client"'
 
   success-notify:
     runs-on: ubuntu-22.04
