@@ -135,7 +135,7 @@ jobs:
     if: success()
     steps:
       - name: Mattermost Notification
-        uses: rtCamp/action-slack-notify@v2.2.0
+        uses: rtCamp/action-slack-notify@v2.3.3
         env:
           SLACK_USERNAME: ${{ github.event.repository.name }}
           SLACK_WEBHOOK: ${{ secrets.mm-webhook-url }}
@@ -149,7 +149,7 @@ jobs:
     if: failure()
     steps:
       - name: Mattermost Notification
-        uses: rtCamp/action-slack-notify@v2.2.0
+        uses: rtCamp/action-slack-notify@v2.3.3
         env:
           SLACK_USERNAME: ${{ github.event.repository.name }}
           SLACK_WEBHOOK: ${{ secrets.mm-webhook-url }}
