@@ -6,12 +6,12 @@ on:
       node-version:
         description: 'Node version'
         required: false
-        default: "16"
+        default: "24"
         type: string
       java-version:
         description: 'Java version'
         required: false
-        default: "21"
+        default: "25"
         type: string
       java-distribution:
         description: 'Java distribution'
