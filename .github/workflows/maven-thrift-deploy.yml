@@ -33,7 +33,7 @@ jobs:
         uses: valitydev/action-setup-thrift@v1.0.3
 
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 

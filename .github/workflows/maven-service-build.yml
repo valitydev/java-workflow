@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Run Build Java
         uses: valitydev/action-jdk-build@0.0.17
@@ -42,7 +42,7 @@ jobs:
     if: ${{ !inputs.ignore-coverage }}
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Run Build Java
         uses: valitydev/action-jdk-build@0.0.17
