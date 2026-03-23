@@ -39,7 +39,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
@@ -70,7 +70,7 @@ jobs:
           retention-days: 7
 
   deploy-server:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: [build]
     steps:
       - name: Checkout Repo
@@ -100,7 +100,7 @@ jobs:
           maven-args: '-Dcommit.number=${{ env.COMMIT_NUMBER }} -Drevision="${{ env.REVISION }}" -P="server"'
 
   deploy-client:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: [build]
     steps:
       - name: Checkout Repo
@@ -130,7 +130,7 @@ jobs:
           maven-args: '-Dcommit.number=${{ env.COMMIT_NUMBER }} -Drevision="${{ env.REVISION }}" -P="client"'
 
   success-notify:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: [deploy-server, deploy-client]
     if: success()
     steps:
@@ -144,7 +144,7 @@ jobs:
           SLACK_FOOTER: ""
 
   fail-notify:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: [deploy-server, deploy-client]
     if: failure()
     steps:
