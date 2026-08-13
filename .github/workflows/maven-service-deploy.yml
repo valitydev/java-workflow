@@ -18,9 +18,16 @@ on:
         required: false
         default: "-DskipTests"
         type: string
+      ignore-coverage:
+        description: 'Deprecated compatibility input; test coverage is no longer run'
+        default: false
+        required: false
+        type: boolean
     secrets:
       github-token:
         required: true
+      mm-webhook-url:
+        required: false
 
 jobs:
   build-and-deploy:
