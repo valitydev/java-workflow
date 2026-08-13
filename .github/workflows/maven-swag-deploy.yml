@@ -34,15 +34,13 @@ on:
         required: true
       github-token:
         required: true
-      mm-webhook-url:
-        required: true
 
 jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -74,7 +72,7 @@ jobs:
     needs: [build]
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -104,7 +102,7 @@ jobs:
     needs: [build]
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -128,31 +126,3 @@ jobs:
           deploy-secret-key: ${{ secrets.deploy-secret-key }}
           deploy-secret-key-password: ${{ secrets.deploy-secret-key-password }}
           maven-args: '-Dcommit.number=${{ env.COMMIT_NUMBER }} -Drevision="${{ env.REVISION }}" -P="client"'
-
-  success-notify:
-    runs-on: ubuntu-22.04
-    needs: [deploy-server, deploy-client]
-    if: success()
-    steps:
-      - name: Mattermost Notification
-        uses: rtCamp/action-slack-notify@v2.2.0
-        env:
-          SLACK_USERNAME: ${{ github.event.repository.name }}
-          SLACK_WEBHOOK: ${{ secrets.mm-webhook-url }}
-          SLACK_COLOR: "#00c100"
-          SLACK_LINK_NAMES: true
-          SLACK_FOOTER: ""
-
-  fail-notify:
-    runs-on: ubuntu-22.04
-    needs: [deploy-server, deploy-client]
-    if: failure()
-    steps:
-      - name: Mattermost Notification
-        uses: rtCamp/action-slack-notify@v2.2.0
-        env:
-          SLACK_USERNAME: ${{ github.event.repository.name }}
-          SLACK_WEBHOOK: ${{ secrets.mm-webhook-url }}
-          SLACK_COLOR: "#e40303"
-          SLACK_LINK_NAMES: true
-          SLACK_FOOTER: ""

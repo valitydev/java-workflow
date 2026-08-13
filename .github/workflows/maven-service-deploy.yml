@@ -18,15 +18,8 @@ on:
         required: false
         default: "-DskipTests"
         type: string
-      ignore-coverage:
-        description: 'Ignore test coverage step'
-        default: false
-        required: false
-        type: boolean
     secrets:
       github-token:
-        required: true
-      mm-webhook-url:
         required: true
 
 jobs:
@@ -34,7 +27,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Run Build Java
         uses: valitydev/action-jdk-build@v0.0.17
@@ -50,30 +43,3 @@ jobs:
           registry-access-token: ${{ secrets.github-token }}
           context-path: "./target"
           dockerfile-path: "./target/Dockerfile"
-
-      - name: Mattermost Notification
-        if: always()
-        uses: rtCamp/action-slack-notify@v2.2.0
-        env:
-          SLACK_USERNAME: ${{ github.event.repository.name }}
-          SLACK_WEBHOOK: ${{ secrets.mm-webhook-url }}
-          SLACK_COLOR: ${{ job.status }}
-          SLACK_LINK_NAMES: true
-          SLACK_FOOTER: ""
-
-  test-coverage:
-    if: ${{ !inputs.ignore-coverage }}
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4
-
-      - name: Run Build Java
-        uses: valitydev/action-jdk-build@v0.0.17
-        with:
-          jdk-version: ${{ inputs.java-version }}
-          jdk-distribution: ${{ inputs.java-distribution }}
-          mvn-args: ${{ inputs.mvn-args }}
-
-      - name: Upload code coverage
-        uses: codecov/codecov-action@v4

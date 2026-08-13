@@ -44,7 +44,6 @@ jobs:
     uses: valitydev/java-workflow/.github/workflows/maven-service-deploy.yml@v1
     secrets:
       github-token: ${{ secrets.GITHUB_TOKEN }}
-      mm-webhook-url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
 ```
 
 ### Service
@@ -57,7 +56,6 @@ uses: valitydev/java-workflow/.github/workflows/maven-service-build.yml@v1
 uses: valitydev/java-workflow/.github/workflows/maven-service-deploy.yml@v1
 secrets:
   github-token: ${{ secrets.GITHUB_TOKEN }}
-  mm-webhook-url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
 ```
 ### Thrift
 `build.yml`
@@ -72,7 +70,6 @@ secrets:
   server-password: ${{ secrets.OSSRH_TOKEN }}
   deploy-secret-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
   deploy-secret-key-password: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
-  mm-webhook-url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
 ```
 `erlang-build-verify.yml`
 ```yaml
@@ -91,7 +88,6 @@ secrets:
   server-password: ${{ secrets.OSSRH_TOKEN }}
   deploy-secret-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
   deploy-secret-key-password: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
-  mm-webhook-url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
 ```
 ### Swag
 `build.yml`
@@ -107,7 +103,6 @@ secrets:
   deploy-secret-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
   deploy-secret-key-password: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
   github-token: ${{ secrets.GITHUB_TOKEN }}
-  mm-webhook-url: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
 ```
 
 ### Semgrep scan
@@ -123,6 +118,4 @@ on:
 jobs:
   scan:
     uses: valitydev/java-workflow/.github/workflows/semgrep-scan.yml@v3.0.5
-    secrets:
-      mm-sa-wh-url: ${{ secrets.MATTERMOST_SA_WH_URL}}
 ```

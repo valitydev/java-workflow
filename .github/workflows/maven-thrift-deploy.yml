@@ -22,8 +22,6 @@ on:
         required: true
       deploy-secret-key-password:
         required: true
-      mm-webhook-url:
-        required: true
 
 jobs:
   deploy:
@@ -33,7 +31,7 @@ jobs:
         uses: valitydev/action-setup-thrift@v1.0.3
 
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -51,16 +49,3 @@ jobs:
           deploy-secret-key: ${{ secrets.deploy-secret-key }}
           deploy-secret-key-password: ${{ secrets.deploy-secret-key-password }}
           maven-args: '-Dcommit.number=${{ env.COMMIT_NUMBER }} -Drevision=${{ env.REVISION }}'
-
-  notify:
-    runs-on: ubuntu-22.04
-    needs: [deploy]
-    steps:
-      - name: Mattermost Notification
-        uses: rtCamp/action-slack-notify@v2.2.0
-        env:
-          SLACK_USERNAME: ${{ github.event.repository.name }}
-          SLACK_WEBHOOK: ${{ secrets.mm-webhook-url }}
-          SLACK_COLOR: ${{ job.status }}
-          SLACK_LINK_NAMES: true
-          SLACK_FOOTER: ""
